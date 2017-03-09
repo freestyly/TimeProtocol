@@ -91,6 +91,26 @@ public class DataSource {
         return worktimes;
     }
 
+    public List<Worktime> getLatestWorktimes() {
+        List<Worktime> worktimes = new ArrayList<>();
+
+        Cursor cursor = database.query(DBHelper.TABLE_WORKTIME,
+                columns_time, null, null, null, null, dbHelper.COL_DAY + " ASC", "4");
+
+        cursor.moveToFirst();
+        Worktime worktime;
+
+        while(!cursor.isAfterLast()) {
+            worktime = cursorToWorktime(cursor);
+            worktimes.add(worktime);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return worktimes;
+    }
+
+
     public void deleteWorktime(Worktime w) {
         String id = w.getDay();
         database.delete(dbHelper.TABLE_WORKTIME, dbHelper.COL_DAY + "=" + id, null);
@@ -148,6 +168,25 @@ public class DataSource {
                 values,
                 dbHelper.COL_ID + "=" + cfg.getId(),
                 null);
+    }
+
+    public List<Config> getConfigs() {
+        List<Config> configs = new ArrayList<>();
+
+        Cursor cursor = database.query(DBHelper.TABLE_CONFIG,
+                columns_config, null, null, null, null, dbHelper.COL_ID + " ASC");
+
+        cursor.moveToFirst();
+        Config config;
+
+        while(!cursor.isAfterLast()) {
+            config = cursorToConfig(cursor);
+            configs.add(config);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return configs;
     }
 
 }
